@@ -55,7 +55,7 @@ exports.loginUser = async (req, res, next) => {
                 message = `Login Successful`;
                 res.status(200).json({
                     message: message,
-                    redirect: `http://localhost:5500/FRONTEND/components/Layout/expenses.html`,
+                    redirect: `/FRONTEND/components/Layout/expenses.html`,
                     token: token,
                     success: true
                 });
@@ -89,7 +89,7 @@ exports.verifyLogin = (req, res, next) => {
 
         res.status(200).json({
         message: message,
-        redirect: 'http://localhost:5500/FRONTEND/components/Layout/expenses.html',
+        redirect: '/FRONTEND/components/Layout/expenses.html',
         success: true
         });
     }

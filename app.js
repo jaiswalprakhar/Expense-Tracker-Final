@@ -45,6 +45,12 @@ app.use('/purchase', purchaseRoutes);
 app.use('/premium', premiumFeatureRoutes);
 app.use('/password', forgotPasswordRoutes);
 
+app.use((req, res) => {
+    //console.log('Frontend URL', req.url);
+    //console.log(path.join(__dirname, `public/${req.url}`));
+    res.sendFile(path.join(__dirname, `public/${req.url}`));
+});
+
 //Error Handle for throwing errors manually
 app.use((err, req, res, next) => {
     //console.error(err.stack);

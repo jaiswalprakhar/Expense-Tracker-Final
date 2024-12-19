@@ -25,7 +25,7 @@ const authenticate = (req, res, next) => {
         }
         return res.status(401).json({ 
             message: err.message,
-            redirect: 'http://localhost:5500/FRONTEND/components/Layout/login.html',
+            redirect: '/FRONTEND/components/Layout/login.html',
             success: false
         })
     }
