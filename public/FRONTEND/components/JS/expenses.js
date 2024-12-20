@@ -47,7 +47,7 @@ const leaderBoard = () => {
 window.showLeaderBoard = async () => {
     try {
         const token = localStorage.getItem('token');
-        const userLeaderBoardArray = await axios.get(`http://51.20.254.129:3000/premium/showLeaderBoard`, { headers: {"Authorization": token} });
+        const userLeaderBoardArray = await axios.get(`http://localhost:3000/premium/showLeaderBoard`, { headers: {"Authorization": token} });
         //console.log(userLeaderBoardArray);
         
         leaderBoardTable.innerHTML = "";
@@ -124,7 +124,7 @@ const leaderBoardBtn = () => {
 window.downloadExpenseFile = () => {
     const token = localStorage.getItem('token');
     showToastResult("File will be downloaded in few seconds");
-    axios.get('http://51.20.254.129:3000/expense/download', { headers: { "Authorization": token } })
+    axios.get('http://localhost:3000/expense/download', { headers: { "Authorization": token } })
     .then((response) => {
         if(response.status === 201) {
             //This anchor will download the file-
@@ -182,7 +182,7 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById('listRange').value = listRange;
         //console.log(listRange);
 
-        axios.get(`http://51.20.254.129:3000/expense/get-expense?page=${page}&range=${listRange}`, { headers: {"Authorization": token} })
+        axios.get(`http://localhost:3000/expense/get-expense?page=${page}&range=${listRange}`, { headers: {"Authorization": token} })
         .then((response) => {
             //console.log(response);
             showLogOutBtn();
@@ -249,7 +249,7 @@ export const handleListRange = (event) => {
 window.getExpenses = (page) => {
     const token = localStorage.getItem('token');
     const listRange = localStorage.getItem('listRange');
-    axios.get(`http://51.20.254.129:3000/expense/get-expense?page=${page}&range=${listRange}`, { headers: {"Authorization": token} })
+    axios.get(`http://localhost:3000/expense/get-expense?page=${page}&range=${listRange}`, { headers: {"Authorization": token} })
     .then(({ data: { expenseFileData, userExpenses, ...pageData } }) => {
         if(expenseFileData.length <= 0) {
             downloadedFileList.style.display = "none";
@@ -308,7 +308,7 @@ export const handleExpenseSubmit = (event) => {
 
 const createExpense = (obj) => {
     const token = localStorage.getItem('token');
-    axios.post('http://51.20.254.129:3000/expense/create-expense', obj, { headers: {"Authorization": token} })
+    axios.post('http://localhost:3000/expense/create-expense', obj, { headers: {"Authorization": token} })
         .then((response) => {
             showExpenses([response.data.newExpense]);
             showToastResult(response.data.message);
@@ -352,7 +352,7 @@ const showDownloadedFiles = (file) => {
 
 window.deleteExpense = (expenseId) => {
     const token = localStorage.getItem('token');
-    axios.delete(`http://51.20.254.129:3000/expense/delete-expense/${expenseId}`, { headers: {"Authorization": token} })
+    axios.delete(`http://localhost:3000/expense/delete-expense/${expenseId}`, { headers: {"Authorization": token} })
     .then((response) => {
         removeExpense(expenseId);
         //console.log(response.data.message);
@@ -379,7 +379,7 @@ const removeExpense = (expenseId) => {
 
 window.getEditExpense = (expenseId) => {
     const token = localStorage.getItem('token');
-    axios.get(`http://51.20.254.129:3000/expense/get-edit-expense/${expenseId}`, { headers: {"Authorization": token} }) 
+    axios.get(`http://localhost:3000/expense/get-edit-expense/${expenseId}`, { headers: {"Authorization": token} }) 
     .then((response) => {
         //console.log(response.data.message);
         //console.log(response.data.expense);
@@ -421,7 +421,7 @@ window.getEditExpense = (expenseId) => {
 
 const postEditExpense = (expenseId, obj) => {
     const token = localStorage.getItem('token');
-    axios.patch(`http://51.20.254.129:3000/expense/post-edit-expense/${expenseId}`, obj, { headers: {"Authorization": token} })
+    axios.patch(`http://localhost:3000/expense/post-edit-expense/${expenseId}`, obj, { headers: {"Authorization": token} })
         .then((response) => {
             showExpenses([response.data.editedExpense]);
             //console.log(response.data.message);
@@ -448,7 +448,7 @@ if (premiumBtn) {
 
         try {
             // Step 1: Create Razorpay order via backend
-            const response = await axios.get("http://51.20.254.129:3000/purchase/premium-membership", {
+            const response = await axios.get("http://localhost:3000/purchase/premium-membership", {
                 headers: { Authorization: token },
             });
 
@@ -471,7 +471,7 @@ if (premiumBtn) {
 
                     // Update transaction status to SUCCESS
                     const res = await axios.post(
-                        "http://51.20.254.129:3000/purchase/update-transaction-status",
+                        "http://localhost:3000/purchase/update-transaction-status",
                         {
                             order_id: options.order_id,
                             payment_id: paymentResponse.razorpay_payment_id,
@@ -508,7 +508,7 @@ if (premiumBtn) {
 
                     // Update transaction status to FAILED
                     await axios.post(
-                        "http://51.20.254.129:3000/purchase/update-transaction-status",
+                        "http://localhost:3000/purchase/update-transaction-status",
                         {
                             order_id,
                             payment_id,
