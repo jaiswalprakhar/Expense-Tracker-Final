@@ -440,46 +440,93 @@ const postEditExpense = (expenseId, obj) => {
         addButton.style.display = "block";
 }
 
-if(premiumBtn) {
-    premiumBtn.onclick = async (event) => {  
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://51.20.254.129:3000/purchase/premium-membership', { headers: {"Authorization": token} });
-        const options = {
-            "key": response.data.key_id,
-            "order_id": response.data.order.id,
-            "handler": async function (response) {
-                //console.log(response);
-                const res = await axios.post('http://51.20.254.129:3000/purchase/update-transaction-status', {
-                    order_id: options.order_id,
-                    payment_id: response.razorpay_payment_id,
-                    status: 'SUCCESS'
-                }, { headers: {"Authorization": token} })
-
-                showToastResult('You are now a premium user');
-                showPremiumUserMsg();
-                /*console.log(response);
-                console.log(res);*/
-                localStorage.setItem('token', res.data.token);
-            } 
-        }
-
-        const rzp1 = new Razorpay(options);
-        rzp1.open();
+if (premiumBtn) {
+    premiumBtn.onclick = async (event) => {
         event.preventDefault();
-        
-        rzp1.on('payment.failed', async (response) => {
-            /*console.log(response);
-            console.log(response.error.metadata.order_id, response.error.metadata.payment_id);*/
-            await axios.post('http://51.20.254.129:3000/purchase/update-transaction-status', {
-                order_id: response.error.metadata.order_id,
-                payment_id: response.error.metadata.payment_id,
-                status: 'FAILED'
-            }, { headers: {"Authorization": token} })
 
-            showToastResult('Payment Issue');
-        })
-    }
+        const token = localStorage.getItem("token");
+
+        try {
+            // Step 1: Create Razorpay order via backend
+            const response = await axios.get("http://51.20.254.129:3000/purchase/premium-membership", {
+                headers: { Authorization: token },
+            });
+
+            if (!response.data.success) {
+                console.error("Error creating order:", response.data.message);
+                showToastResult("Failed to initiate payment. Please try again.");
+                return;
+            }
+
+            console.log("Order created:", response.data);
+
+            // Step 2: Setup Razorpay modal options
+            const options = {
+                key: response.data.key_id,
+                order_id: response.data.order.id,
+                name: "Expense Tracker",
+                description: "Premium Membership Purchase",
+                handler: async function (paymentResponse) {
+                    console.log("Payment successful:", paymentResponse);
+
+                    // Update transaction status to SUCCESS
+                    const res = await axios.post(
+                        "http://51.20.254.129:3000/purchase/update-transaction-status",
+                        {
+                            order_id: options.order_id,
+                            payment_id: paymentResponse.razorpay_payment_id,
+                            status: "SUCCESS",
+                        },
+                        { headers: { Authorization: token } }
+                    );
+
+                    if (res.data.success) {
+                        showToastResult("You are now a premium user!");
+                        showPremiumUserMsg();
+                        localStorage.setItem("token", res.data.token);
+                    } else {
+                        showToastResult("Payment processed, but update failed.");
+                    }
+                },
+                modal: {
+                    ondismiss: function () {
+                        console.warn("Payment modal dismissed");
+                    },
+                },
+            };
+
+            // Step 3: Open Razorpay checkout modal
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+
+            // Step 4: Handle payment failure
+            rzp1.on("payment.failed", async function (errorResponse) {
+                console.error("Payment failed:", errorResponse);
+
+                if (errorResponse.error.metadata) {
+                    const { order_id, payment_id } = errorResponse.error.metadata;
+
+                    // Update transaction status to FAILED
+                    await axios.post(
+                        "http://51.20.254.129:3000/purchase/update-transaction-status",
+                        {
+                            order_id,
+                            payment_id,
+                            status: "FAILED",
+                        },
+                        { headers: { Authorization: token } }
+                    );
+                }
+
+                showToastResult("Payment failed. Please try again.");
+            });
+        } catch (error) {
+            console.error("Error initiating payment:", error);
+            showToastResult("Unable to initiate payment. Please try again later.");
+        }
+    };
 }
+
 
 const showLogOutBtn = () => {
     const logOutBtn = document.createElement('a');

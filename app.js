@@ -34,7 +34,39 @@ const accessLogStream = fs.createWriteStream(
     { flags: 'a' }
 );
 
-app.use(helmet());
+//app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "https://checkout.razorpay.com",
+                    "https://lumberjack.razorpay.com",
+                    "https://lumberjack-cx.razorpay.com",
+                    "https://api.razorpay.com" // Add this for API calls
+                ],
+                scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                connectSrc: [
+                    "'self'",
+                    "https://checkout.razorpay.com",
+                    "https://lumberjack.razorpay.com",
+                    "https://lumberjack-cx.razorpay.com",
+                    "https://api.razorpay.com" // Allow Razorpay API
+                ],
+                imgSrc: ["'self'", "data:", "https://checkout.razorpay.com"],
+                frameSrc: [
+                    "https://checkout.razorpay.com", 
+                    "https://api.razorpay.com" // Allow Razorpay API in iframes
+                ],
+                objectSrc: ["'none'"],
+                upgradeInsecureRequests: [],
+            },
+        },
+    })
+);
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.json());

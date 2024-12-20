@@ -1,3 +1,3 @@
 exports.get404 = (req, res, next) => {
-    res.status(404).json({ error: 'PAGE NOT FOUND' });
+    res.status(404).json({ error: 'PAGE NOT FOUND IN EXPENSE TRACKER APP' });
   };
