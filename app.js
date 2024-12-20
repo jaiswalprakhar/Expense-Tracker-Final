@@ -35,7 +35,7 @@ const accessLogStream = fs.createWriteStream(
 );
 
 //app.use(helmet());
-app.use(
+/*app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
@@ -66,7 +66,7 @@ app.use(
             },
         },
     })
-);
+);*/
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.json());

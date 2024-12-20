@@ -29,7 +29,7 @@ export const handleSignupSubmit = (event) => {
 };
 
 const createUser = (obj) => {
-    axios.post("http://localhost:3000/user/create-user", obj)
+    axios.post("http://51.20.254.129:3000/user/create-user", obj)
     .then((response) => {
         showToastResult(response.data.message);
     })
