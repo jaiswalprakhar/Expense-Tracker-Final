@@ -80,7 +80,9 @@ app.use('/password', forgotPasswordRoutes);
 app.use((req, res) => {
     //console.log('Frontend URL', req.url);
     //console.log(path.join(__dirname, `public/${req.url}`));
-    res.sendFile(path.join(__dirname, `public/${req.url}`));
+    //res.sendFile(path.join(__dirname, `public/${req.url}`));
+    const urlWithoutQuery = req.path; // Extract only the path without query parameters
+    res.sendFile(path.join(__dirname, `public/${urlWithoutQuery}`));
 });
 
 //Error Handle for throwing errors manually
