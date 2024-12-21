@@ -2,10 +2,7 @@ const puppeteer = require('puppeteer');
 
 // Function to generate a PDF using PDFKit from the generated HTML-like structure-
 const generatePDF = async (htmlContent) => {
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     // Set the HTML content
