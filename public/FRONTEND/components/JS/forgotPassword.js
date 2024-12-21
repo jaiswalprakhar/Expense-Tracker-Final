@@ -18,7 +18,7 @@ export const handleForgotPassword = (event) => {
 }
 
 const forgotPassword = (obj) => {
-    axios.post('http://51.20.254.129:3000/password/forgot-password', obj)
+    axios.post('http://13.61.101.100:3000/password/forgot-password', obj)
         .then((response) => {
             //console.log(response);
             showToastResult(response.data.message);

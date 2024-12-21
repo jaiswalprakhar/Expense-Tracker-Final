@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    axios.get('http://51.20.254.129:3000/user/verify-login', { headers: {"Authorization": token} })
+    axios.get('http://13.61.101.100:3000/user/verify-login', { headers: {"Authorization": token} })
       .then((response) => {
           if(response.status == 200) {
               //console.log(response.data.message);
@@ -50,7 +50,7 @@ export const handleLoginSubmit = (event) => {
 };
 
 const loginUser = (obj) => {
-    axios.post("http://51.20.254.129:3000/user/login-user", obj)
+    axios.post("http://13.61.101.100:3000/user/login-user", obj)
     .then((response) => {
         showToastResult(response.data.message);
         localStorage.setItem('token', response.data.token);
