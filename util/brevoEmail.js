@@ -22,7 +22,7 @@ const brevoEmail = async (receiverEmail, uuid) =>  {
         to: receivers,
         subject: 'Reset password link',
         htmlContent: `<p>Change your password with the following link</p>
-        <a href="http://13.61.101.100/FRONTEND/components/Layout/updatePassword.html?uuid=${uuid}">Reset password link</a>`
+        <a href="http://16.171.57.54/FRONTEND/components/Layout/updatePassword.html?uuid=${uuid}">Reset password link</a>`
     });
 
     return Emailmsg;

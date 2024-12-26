@@ -28,7 +28,7 @@ const updatePassword = (obj) => {
     if(uuid) {
         params.uuid = uuid;
     }
-    axios.patch(`http://13.61.101.100:3000/password/update-password`, obj, { params })
+    axios.patch(`http://16.171.57.54:3000/password/update-password`, obj, { params })
     .then((response) => {
         //console.log(response.data.message);
         showToastResult(response.data.message);
